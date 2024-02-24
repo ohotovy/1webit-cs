@@ -19,6 +19,3 @@ di:
 	export:
 		parameters: no
 		tags: no
-
-extensions:
-	nettrine.dbal: Nettrine\DBAL\DI\DbalExtension
