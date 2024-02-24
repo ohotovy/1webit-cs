@@ -1,0 +1,9 @@
+config/local.neon
+**/.DS_Store
+.idea
+.vscode
+.env
+/vendor
+/cache/**/*.json
+/storage/**/*.json
+/docker/postgres-data

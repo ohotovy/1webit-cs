@@ -1,0 +1,40 @@
+services:
+  app:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: 1webit-shop-app
+    restart: always
+    working_dir: /var/www/
+    volumes:
+      - ..:/var/www
+  nginx:
+    image: nginx:1.24-alpine
+    container_name: 1webit-shop-nginx
+    restart: always
+    ports:
+      - 8000:80
+    volumes:
+      - ..:/var/www
+      - ./nginx:/etc/nginx/conf.d
+
+  db:
+    image: postgres
+    container_name: 1webit-shop-db
+    restart: always
+    shm_size: 128mb
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - 5432:5432
+
+  adminer:
+    image: adminer
+    container_name: 1webit-shop-adminer
+    restart: always
+    ports:
+      - 8080:8080
+    depends_on:
+      - db
