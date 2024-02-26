@@ -1,6 +1,13 @@
 {block content}
     Products for {$basketId}
 
+	<div>
+		<form n:name=searchForm>
+            <input n:name=search_query>
+            <input n:name=send value="Search">
+        </form>
+	</div>
+
     <div n:foreach="$products as $product">
         <p>{$product->getName()}</p>
 		<p>{$product->getShortDescription()}</p>

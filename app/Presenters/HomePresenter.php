@@ -24,10 +24,24 @@ final class HomePresenter extends Nette\Application\UI\Presenter
 	) {
 	}
 
-	public function renderDefault(): void
+	public function renderDefault(?string $query = null): void
 	{
         $productRepository = $this->em->getRepository(Product::class);
-        $products = $productRepository->findAll();
+        if (!is_null($query)) {
+            $qb = $this->em->createQueryBuilder();
+            $qb->select(array('u'))
+                ->from(Product::class, 'u')
+                ->where($qb->expr()->orX(
+                    $qb->expr()->like('u.name', '?1'),
+                    $qb->expr()->like('u.description', '?1')
+                ))
+                ->orderBy('u.id', 'ASC')
+                ->setParameter(1, '%'.$query.'%');
+            $query = $qb->getQuery();
+            $products = $query->getResult();
+        } else {
+            $products = $productRepository->findAll();
+        }
         $this->template->products = $products;
 
 		// $section = $this->session->getSection('basket');
@@ -118,4 +132,24 @@ final class HomePresenter extends Nette\Application\UI\Presenter
         $this->redirect('this');
     }
 
+    protected function createComponentSearchForm(): Form
+    {
+        $form = new Form;
+
+		$form->addText('search_query');
+
+        $form->addSubmit('send');
+
+        $form->onSuccess[] = $this->searchFormSucceeded(...);
+
+        return $form;
+    }
+
+    private function searchFormSucceeded(\stdClass $data): void
+    {
+        $dataValid = true;
+
+        // $this->flashMessage();
+        $this->redirect('this',['query' => $data->search_query]);
+    }
 }
