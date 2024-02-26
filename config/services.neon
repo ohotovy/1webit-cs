@@ -1,9 +1,12 @@
 services:
 	- App\Router\RouterFactory::createRouter
-
+	- App\Model\EntityManager
 
 search:
 	-	in: %appDir%
 		classes:
 			- *Factory
 			- *Facade
+	-	in: %appDir%/Model/Entity
+		classes:
+			- *

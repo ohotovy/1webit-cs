@@ -1,0 +1,12 @@
+{block content}
+    Products!
+
+    <div n:foreach="$products as $product">
+        <p>{$product->getName()}</p>
+        {foreach $product->getItems() as $item}
+            {$item->getProductName()} : {$item->getTotalPrice()}
+            <br>
+        {/foreach}
+    </div>
+
+{/block}
