@@ -1,0 +1,86 @@
+<?php
+namespace App\Presenters;
+
+use Nette;
+use Nette\Http\Request;
+use Nette\Http\Response;
+use Nette\Application\UI\Form;
+
+use App\Model\EntityManager;
+use App\Model\Entity\Product;
+use App\Model\Entity\Order;
+
+use App\DTO\ProductBasketInsert;
+use App\DTO\ProductBasketIncrease;
+
+
+final class ProductPresenter extends Nette\Application\UI\Presenter
+{
+	public function __construct(
+		private EntityManager $em,
+		private Request $httpRequest,
+		private Response $httpResponse
+	) {
+	}
+
+	public function renderDefault(): void
+	{
+        $productRepository = $this->em->getRepository(Product::class);
+        $products = $productRepository->findAll();
+        $this->template->products = $products;
+
+		// $section = $this->session->getSection('basket');
+
+		$basketId = $this->httpRequest->getCookie('basketId');
+
+		$this->template->basketId = $basketId;
+	}
+
+	protected function createComponentAddToBasketForm(): Form
+    {
+        $form = new Form;
+
+		$form->addHidden('product_id');
+
+        $form->addInteger('qty');
+
+        $form->addSubmit('send');
+
+        $form->onSuccess[] = $this->addToBasketFormSucceeded(...);
+
+        return $form;
+    }
+
+	private function addToBasketFormSucceeded(\stdClass $data): void
+    {
+        // $postId = $this->getParameter('postId');
+
+        // $this->database->table('comments')->insert([
+        //     'post_id' => $postId,
+        //     'name' => $data->name,
+        //     'email' => $data->email,
+        //     'content' => $data->content,
+        // ]);
+
+		// $section = $this->session->getSection('basket');
+
+		// $basketId = $this->httpRequest->get('basketId')
+
+		// $section->set('basketId',$basketId);
+
+		// $this->httpResponse->setCookie('basketId',$basketId,'14 days');
+
+		$dataObject = new ProductBasketInsert(
+			$data->product_id,
+			$data->qty,
+			$this->httpRequest->getCookie('basketId'),
+		);
+
+		var_dump($dataObject);
+		die;
+
+        $this->flashMessage('Basket Addition Successful', 'success');
+        $this->redirect('this');
+    }
+
+}

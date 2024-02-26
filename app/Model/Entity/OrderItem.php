@@ -6,6 +6,9 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
+use App\DTO\ProductBasketInsert;
+use App\DTO\ProductBasketIncrease;
+
 #[ORM\Entity]
 #[ORM\Table(name: 'order_product')]
 class OrderItem
@@ -15,23 +18,25 @@ class OrderItem
     #[ORM\GeneratedValue]
     private int|null $id = null;
 
+    #[ORM\Column(name: 'order_id')]
+    private int $orderId;
+    #[ORM\Column(name: 'product_id')]
+    private int $productId;
+
     #[ORM\ManyToOne(inversedBy: 'items')]
     private Order $order;
     #[ORM\ManyToOne(inversedBy: 'inOrders')]
     private Product $product;
 
+
     #[ORM\Column]
-    private int $amount = 1;
+    private int $qty = 1;
 
     #[ORM\Column(name: 'unit_price', type: Types::DECIMAL, precision: 10, scale: 2)]
     private float $unitPrice;
 
-    public function __construct(
-    )
+    public function __construct()
     {
-        // $this->order = $order;
-        // $this->product = $product;
-        // $this->offeredPrice = $product->getCurrentPrice();
     }
 
     public function getProductName() : string
@@ -39,8 +44,31 @@ class OrderItem
         return $this->product->getName();
     }
 
+    public function getProductPrice() : string
+    {
+        return $this->product->getPrice();
+    }
+
     public function getTotalPrice() : float
     {
-        return $this->unitPrice * $this->amount;
+        return $this->unitPrice * $this->qty;
+    }
+
+    public function addNewToBasket(ProductBasketInsert $data) : void
+    {
+        $this->product = $data->product;
+        $this->order = $data->order;
+        $this->qty = $data->qty;
+        $this->unitPrice = $this->getProductPrice();
+    }
+
+    // public function setUnitPrice()
+    // {
+
+    // }
+
+    public function addBasketIncrease(ProductBasketIncrease $data) : void
+    {
+        $this->qty += $data->qty;
     }
 }

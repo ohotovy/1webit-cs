@@ -1,12 +1,13 @@
 {block content}
-    Products!
+    Products for {$basketId}
 
     <div n:foreach="$products as $product">
         <p>{$product->getName()}</p>
-        {foreach $product->getItems() as $item}
-            {$item->getProductName()} : {$item->getTotalPrice()}
-            <br>
-        {/foreach}
+        <form n:name=addToBasketForm>
+            <input n:name=product_id value={$product->getId()}>
+            <input n:name=qty value="1">
+            <input n:name=send value="Add to Basket">
+        </form>
     </div>
 
 {/block}

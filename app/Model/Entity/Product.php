@@ -18,6 +18,12 @@ class Product
     private int|null $id = null;
     #[ORM\Column]
     private string $name;
+    #[ORM\Column(name: 'description', type: Types::TEXT)]
+    private string $description;
+    #[ORM\Column(name: 'short_desc')]
+    private string $shortDesc;
+    #[ORM\Column(name: 'image_url', nullable: true)]
+    private string $imageUrl;
     #[ORM\Column(name: 'unit_price', type: Types::DECIMAL, precision: 10, scale: 2)]
     private float $unitPrice;
 
@@ -27,6 +33,26 @@ class Product
     public function __construct()
     {
         $this->inOrders = new ArrayCollection;
+    }
+
+    public function getId() : int
+    {
+        return $this->id;
+    }
+
+    public function getDescription() : string
+    {
+        return $this->description;
+    }
+
+    public function getShortDescription() : string
+    {
+        return $this->shortDesc;
+    }
+
+    public function getImageUrl() : string
+    {
+        return $this->imageUrl;
     }
 
     public function getName() : string
