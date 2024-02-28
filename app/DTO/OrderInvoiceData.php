@@ -12,7 +12,6 @@ class OrderInvoiceData
         public readonly string $streetAndNo,
         public readonly string $zip,
         public readonly ?string $note=null,
-    )
-    {
+    ) {
     }
 }

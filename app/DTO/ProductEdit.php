@@ -9,7 +9,6 @@ class ProductEdit
         public readonly string $description,
         public readonly string $shortDesc,
         public readonly float $unitPrice
-    )
-    {
+    ) {
     }
 }
