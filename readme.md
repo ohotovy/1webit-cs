@@ -12,4 +12,4 @@ Follow the instructions to get the project running (starts in project root)
 1. (in container bash) `php seed_tables.php`
 1. Go to `localhost:8000` in browser or `localhost:8000/admin` for admin section.
 
-In case it doesn't work step by step, apologies, it's frankly my first time using Docker in a project and "It works on my machine(tm)". Please don't hesitate to ask on `ondrej.hotovy@outlook.com`.
+In case it doesn't work step by step, apologies, still not THAT good w/ Docker and "It works on my machine(tm)". Please don't hesitate to ask on `ondrej.hotovy@outlook.com`.
