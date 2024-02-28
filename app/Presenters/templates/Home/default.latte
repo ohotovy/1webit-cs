@@ -3,13 +3,20 @@
 
 	<div>
 		<form n:name=searchForm>
-            <input n:name=search_query>
+            <input n:name=search_query value="{$query}">
             <input n:name=send value="Search">
         </form>
+		{if $query}
+			<a n:href="Home:default">Clear Search</a>
+		{/if}
+	</div>
+
+	<div>
+		<a n:href="Basket:items">Basket</a>
 	</div>
 
     <div n:foreach="$products as $product">
-        <p>{$product->getName()}</p>
+        <p><a n:href="Product:detail $productId=$product->getId()">{$product->getName()}</a></p>
 		<p>{$product->getShortDescription()}</p>
         <form n:name=addToBasketForm>
             <input n:name=product_id value={$product->getId()}>

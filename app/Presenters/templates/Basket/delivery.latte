@@ -1,0 +1,20 @@
+{block backLink}
+    <a n:href="Basket:invoicing">Back</a>
+{/block}
+
+{block content}
+
+    {form deliveryDataForm}
+        {* <select id="frm-deliveryDataForm-delivery_method_id" name="delivery_method_id">
+            <option n:foreach="$deliveryMethodsArray as $id => $name" value={$id} {if ($id == $chosenDeliveryId)}selected{/if}>{$name}</option>
+        </select>
+        <select id="frm-deliveryDataForm-payment_method_id" name="payment_method_id">
+            <option n:foreach="$paymentMethodsArray as $id => $name" value={$id} {if ($id == $chosenPaymentId)}selected{/if}>{$name}</option>
+        </select> *}
+        {input delivery_method_id}
+        {input payment_method_id}
+        {input adjust}
+        {input cac}
+
+    {/form}
+{/block}

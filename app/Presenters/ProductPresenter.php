@@ -16,38 +16,20 @@ use App\DTO\ProductBasketInsert;
 use App\DTO\ProductBasketIncrease;
 
 
-final class HomePresenter extends Nette\Application\UI\Presenter
+final class ProductPresenter extends Nette\Application\UI\Presenter
 {
 	public function __construct(
 		private EntityManager $em,
 		private Request $httpRequest,
-		private Response $httpResponse,
+		private Response $httpResponse
 	) {
 	}
 
-	public function renderDefault(?string $query = null): void
-	{
-        $this->template->query = $query;
-        $productRepository = $this->em->getRepository(Product::class);
-        if (!is_null($query)) {
-            $qb = $this->em->createQueryBuilder();
-            $qb->select(array('u'))
-                ->from(Product::class, 'u')
-                ->where('LOWER (u.name) LIKE ?1')
-                ->orWhere('LOWER (u.description) LIKE ?1')
-                ->orderBy('u.id', 'ASC')
-                ->setParameter(1, '%'.strtolower($query).'%');
-            $query = $qb->getQuery();
-            $products = $query->getResult();
-        } else {
-            $products = $productRepository->findBy([],['id' => 'ASC']);
-        }
-        $this->template->products = $products;
-
-		$basketId = $this->httpRequest->getCookie('basketId');
-
-		$this->template->basketId = $basketId;
-	}
+    public function renderDetail(int $productId) : void
+    {
+        $product = $this->em->find(Product::class, $productId);
+        $this->template->product = $product;
+    }
 
 	protected function createComponentAddToBasketForm(): Form
     {
@@ -131,24 +113,4 @@ final class HomePresenter extends Nette\Application\UI\Presenter
         $this->redirect('this');
     }
 
-    protected function createComponentSearchForm(): Form
-    {
-        $form = new Form;
-
-		$form->addText('search_query');
-
-        $form->addSubmit('send');
-
-        $form->onSuccess[] = $this->searchFormSucceeded(...);
-
-        return $form;
-    }
-
-    private function searchFormSucceeded(\stdClass $data): void
-    {
-        $dataValid = true;
-
-        // $this->flashMessage();
-        $this->redirect('this',['query' => $data->search_query]);
-    }
 }

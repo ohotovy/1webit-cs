@@ -1,0 +1,18 @@
+{block backLink}
+{/block}
+
+{block content}
+    {if $basketId}
+        <form n:name=confirmBasketForm>
+            <div n:foreach="$basket->getItems() as $key => $item">
+                <input name="product_id[]" type="hidden" value={$item->getId()}>
+                <input name="qty[]" type="number" value={$item->getQuantity()}> x - {$item->getProductName()}
+            </div>
+            <input n:name=adjust>
+            <input n:name=cac>
+        </form>
+    {else}
+        <p>Nothing to see here... yet :)</p>
+    {/if}
+
+{/block}

@@ -1,0 +1,17 @@
+{block backLink}
+    <a n:href="Basket:items">Back</a>
+{/block}
+
+{block content}
+    <form n:name=invoicingDataForm>
+        <label>First Name:</label><input n:name=first_name value={$basket->getFirstName() ?? ''}><br>
+        <label>Last Name:</label><input n:name=last_name value={$basket->getLastName() ?? ''}><br>
+        <label>Contact Email:</label><input n:name=email type="email" value={$basket->getEmail() ?? ''}><br>
+        <label>City:</label><input n:name=city value={$basket->getCity() ?? ''}><br>
+        <label>Street and Street No.:</label><input n:name=street_and_no value={$basket->getStreetAndNo() ?? ''}><br>
+        <label>ZIP:</label><input n:name=zip value={$basket->getZip() ?? ''}><br>
+        <label>Optional Note:</label><textarea n:name=note>{$basket->getNote() ?? ''}</textarea><br>
+        <input n:name=adjust>
+        <input n:name=cac>
+    </form>
+{/block}

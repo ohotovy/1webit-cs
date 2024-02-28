@@ -1,0 +1,39 @@
+{block backLink}
+    <a n:href="Basket:delivery">Back</a>
+{/block}
+
+{block content}
+    <h2>Please review your Order</h2>
+
+    <div>
+        <h4>Basket Items - <a n:href="Basket:items">Edit</a></h4>
+
+        <p n:foreach="$basket->getItems() as $item">{$item->getQuantity()}x - {$item->getProductName()} ------- {$item->getTotalPrice()}Kc</p>
+
+        <p>Total Price ------------ <strong>{$basket->getTotalPrice()}Kc</strong></p>
+    </div>
+
+    <div>
+        <h4>Invoicing data - <a n:href="Basket:invoicing">Edit</a></h4>
+
+        <p>Name : {$basket->getFullName()}</p>
+        <p>Contact Email : {$basket->getEmail()}</p>
+        <p>Address :</p>
+        <p>{$basket->getStreetAndNo()}</p>
+        <p>{$basket->getCity()}, {$basket->getZip()}</p>
+        {if $basket->getNote()}
+            <p>Note :</p>
+            <p>{$basket->getNote()}
+        {/if}
+    </div>
+
+    <div>
+        <h4>Delivery and Payment - <a n:href="Basket:delivery">Edit</a></h4>
+
+        <p>Delivery : {$basket->getDeliveryMethod()->getName()}</p>
+        <p>Payment : {$basket->getPaymentMethod()->getName()}</p>
+    </div>
+
+    {control confirmOrderForm}
+
+{/block}

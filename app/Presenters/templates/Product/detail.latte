@@ -1,0 +1,19 @@
+{block content}
+    <p><a n:href="Home:default">Home</a></p>
+
+    <h1>{$product->getName()}</h1>
+
+    <img src="/images/products/{$product->getImageUrl()}" style="height: 300px" alt="{$product->getName()}">
+
+    <p>{$product->getDescription()}</p>
+
+    <h3>{$product->getPrice()}Kc</h3>
+
+    <div>
+        <form n:name=addToBasketForm>
+            <input n:name=product_id value={$product->getId()}>
+            <input n:name=qty value="1">
+            <input n:name=send value="Add to Basket">
+        </form>
+    </div>
+{/block}
