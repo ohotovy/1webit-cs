@@ -1,0 +1,16 @@
+parameters:
+
+	database:
+	# This should work
+	driver: pdo_pgsql
+	port: 5432
+	host: db
+	dbname: postgres
+	user: 'postgres'
+	# CHANGE - This eeds to match /.env
+	password: 'password123'
+
+security:
+	users:
+		# CHANGE - independent
+		username: password
