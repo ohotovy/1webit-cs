@@ -56,12 +56,9 @@ final class OrderPresenter extends Nette\Application\UI\Presenter
         }
 
         $form->addHidden('order_id')
-            ->setDefaultValue($order->getId())
-        ;
+            ->setDefaultValue($order->getId());
         $form->addSelect('status_id','Status',$statusOptions)
-            ->setDefaultValue($order->getStatus() ? $order->getStatus()->getId() : null)
-        ;
-
+            ->setDefaultValue($order->getStatus() ? $order->getStatus()->getId() : null);
         $form->addSubmit('edit', 'Update');
 
         $form->onSuccess[] = $this->editOrderFormSucceeded(...);

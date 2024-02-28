@@ -57,21 +57,18 @@ final class ProductPresenter extends Nette\Application\UI\Presenter
             ->setDefaultValue($isEdit ? $product->getId() : null);
         $form->addText('name', 'Name')
             ->setDefaultValue($isEdit ? $product->getName() : null)
-            ->setRequired()
-            ;
+            ->setRequired();
         $form->addTextArea('description', 'Description')
             ->setDefaultValue($isEdit ? $product->getDescription() : null);
         $form->addText('short_desc', 'Short Description')
             ->setDefaultValue($isEdit ? $product->getShortDescription() : null)
-            ->setRequired()
-            ;
+            ->setRequired();
         $form->addText('unit_price', 'Price')
             ->setDefaultValue($isEdit ? $product->getPrice() : null)
-            ->setRequired()
-            ;
+            ->setRequired();
         $currentImageText = $isEdit ?( $product->getImageUrl() ? ' (current '.$product->getImageUrl().')' : '') : null;
         $form->addUpload('image', 'Image'.$currentImageText)
-            // Doesn't work
+            // Straight from documentation, doesn't work, no time to debug
             // ->addRule($form::Image, 'Avatar must be JPEG, PNG, GIF, WebP or AVIF')
             ->addRule($form::MaxFileSize, 'Maximum size is 1 MB', 1024 * 1024)
         ;
