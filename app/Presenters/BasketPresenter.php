@@ -46,21 +46,17 @@ final class BasketPresenter extends Nette\Application\UI\Presenter
         }
 	}
 
+    // STEP 1 - confirm ordered items
+
 	protected function createComponentConfirmBasketForm(): Form
     {
         $form = new Form;
 
-        // foreach ($this->template->basket->getItems() as $key => $item) {
-        //     $form->addInteger($key);
-        // }
-
-        // $form->addSubmit('send');
+        // Actual inputs in latte
         $form->addSubmit('adjust', 'Adjust')
             ->onClick[] = [$this, 'adjustButtonPressed'];
-
         $form->addSubmit('cac', 'Confirm and Continue')
             ->onClick[] = [$this, 'cacButtonPressed'];
-
 
         $form->onSuccess[] = function () use ($form) {
 
@@ -73,21 +69,14 @@ final class BasketPresenter extends Nette\Application\UI\Presenter
                     'qty' => (int) $qty
                 ];
             }
-            // var_dump($data);
-            // return $data;
             $this->confirmBasketFormSucceeded($data);
         };
-        // $form->onSuccess[] = $this->confirmBasketFormSucceeded($form);
 
         return $form;
     }
 
 	private function confirmBasketFormSucceeded($data): void
     {
-        // $data = $form->getHttpData($form::DataLine, 'qty[]');
-
-        // $presenter->redirect('this');
-
         $dataValid = true;
         foreach ($data as $productData) {
             if (!is_numeric($productData['qty']) || $productData['qty'] < 0) {
@@ -100,8 +89,6 @@ final class BasketPresenter extends Nette\Application\UI\Presenter
             $this->redirect('this');
             $this->terminate();
         }
-
-
 
         $basketId = $this->httpRequest->getCookie('basketId');
 
@@ -116,14 +103,20 @@ final class BasketPresenter extends Nette\Application\UI\Presenter
         $changeMade = false;
         $orderedItems = $order->getItems();
 
+        // handle incoming data about products
         foreach ($data as $productData) {
+            // find matching item in basket, with DIFFERENT ordered quantity than in incoming data
+            // (if same, no need to manipulate the record)
             $item = $orderedItems->filter(function ($orderedItem) use ($productData) {
                 return $orderedItem->getId() === $productData['id'] && $orderedItem->getQuantity() !== $productData['qty'];
             })->first();
+            // if found
             if ($item) {
+                // delete record if incoming data say 0 quantity
                 if ($productData['qty'] === 0) {
                     $this->em->remove($item);
                 } else {
+                    // or simply change quantity
                     $qtyObject = new ProductBasketIncrease(
                         $productData['qty']
                     );
@@ -142,6 +135,8 @@ final class BasketPresenter extends Nette\Application\UI\Presenter
         $redirectTo = $this->redirectTo == 'this' ? 'this' : 'Basket:invoicing';
         $this->redirect($redirectTo);
     }
+
+    // STEP 2 - Enter invoicing data
 
     public function renderInvoicing(): void
 	{
@@ -214,6 +209,8 @@ final class BasketPresenter extends Nette\Application\UI\Presenter
         $redirectTo = $this->redirectTo == 'this' ? 'this' : 'Basket:delivery';
         $this->redirect($redirectTo);
     }
+
+    // STEP 3 - delivery and payment
 
     public function renderDelivery(): void
 	{
@@ -298,6 +295,8 @@ final class BasketPresenter extends Nette\Application\UI\Presenter
         $this->redirect($redirectTo);
     }
 
+    // STEP 4 - Final recap
+
     public function renderRecapitulation() : void
     {
         $basketId = $this->httpRequest->getCookie('basketId');
@@ -337,6 +336,10 @@ final class BasketPresenter extends Nette\Application\UI\Presenter
 
         $this->redirect('Basket:success');
     }
+
+    // STEP 5 - confirmation, just view
+
+    // handlers for pressing buttons "Adjust" (confirm new data) and "Confirm and Contiue" (confirm new data, go to next step)
 
     public function adjustButtonPressed() : void
     {

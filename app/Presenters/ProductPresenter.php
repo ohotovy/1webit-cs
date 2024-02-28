@@ -36,9 +36,7 @@ final class ProductPresenter extends Nette\Application\UI\Presenter
         $form = new Form;
 
 		$form->addHidden('product_id');
-
         $form->addInteger('qty');
-
         $form->addSubmit('send');
 
         $form->onSuccess[] = $this->addToBasketFormSucceeded(...);
@@ -56,12 +54,13 @@ final class ProductPresenter extends Nette\Application\UI\Presenter
         if ($dataValid !== true) {
             $this->flashMessage('Basket Addition Failed', 'failure');
             $this->redirect('this');
+            $this->terminate();
         }
 
         $basketId = $this->httpRequest->getCookie('basketId');
 
         if (is_null($basketId)) {
-            // create order
+            // create order if the basket doesn't exist yet
             $order = new Order();
             $order->setStatus($this->em->getRepository(OrderStatus::class)->findOneBy(['slug' => 'in-cart']));
             $this->em->persist($order);
@@ -77,18 +76,10 @@ final class ProductPresenter extends Nette\Application\UI\Presenter
         $product = $this->em->getRepository(Product::class)
             ->find($data->product_id);
 
-        // var_dump($order);
-        // die();
-        // check if OrderItem for basket & product exists
         $orderItem = $this->em->getRepository(OrderItem::class)
             ->findOneBy(['productId' => (int) $data->product_id, 'orderId' => $basketId]);
-            // ->findOneBy(['productId' => $data->product_id, 'orderId' => $basketId]);
-
-        // var_dump($data->product_id);
-        // die();
 
         if (is_null($orderItem)) {
-            // save OrderItem
             $dataObject = new ProductBasketInsert(
                 $product,
                 $order,
@@ -104,10 +95,6 @@ final class ProductPresenter extends Nette\Application\UI\Presenter
         }
         $this->em->persist($orderItem);
         $this->em->flush();
-
-
-		// var_dump($orderItem);
-		// die;
 
         $this->flashMessage('Basket Addition Successful', 'success');
         $this->redirect('this');
