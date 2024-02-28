@@ -17,7 +17,13 @@ class OrderItem
     #[ORM\Column(type: 'integer')]
     #[ORM\GeneratedValue]
     private int|null $id = null;
+    #[ORM\Column]
+    private int $qty = 1;
+    #[ORM\Column(name: 'unit_price', type: Types::DECIMAL, precision: 10, scale: 2)]
+    private float $unitPrice;
 
+    // Needed separately for checking in basket, if there should be new record or we're adding
+    // a new record (i.e. we're adding a new product to basket) or not (i.e. we're increasing quantity)
     #[ORM\Column(name: 'order_id')]
     private int $orderId;
     #[ORM\Column(name: 'product_id')]
@@ -28,16 +34,7 @@ class OrderItem
     #[ORM\ManyToOne(inversedBy: 'inOrders')]
     private Product $product;
 
-
-    #[ORM\Column]
-    private int $qty = 1;
-
-    #[ORM\Column(name: 'unit_price', type: Types::DECIMAL, precision: 10, scale: 2)]
-    private float $unitPrice;
-
-    public function __construct()
-    {
-    }
+    // getters
 
     public function getId() : int
     {
@@ -69,6 +66,8 @@ class OrderItem
         return $this->unitPrice * $this->qty;
     }
 
+    // setters
+
     public function addNewToBasket(ProductBasketInsert $data) : void
     {
         $this->product = $data->product;
@@ -76,11 +75,6 @@ class OrderItem
         $this->qty = $data->qty;
         $this->unitPrice = $this->getProductPrice();
     }
-
-    // public function setUnitPrice()
-    // {
-
-    // }
 
     public function addBasketIncrease(ProductBasketIncrease $data) : void
     {

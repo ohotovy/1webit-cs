@@ -23,6 +23,8 @@ class PaymentMethod
     #[ORM\OneToMany(targetEntity: Order::class, mappedBy: 'paymentMethod')]
     private Collection $orders;
 
+    // getters
+
     public function __construct()
     {
         $this->orders = new ArrayCollection;
@@ -48,7 +50,7 @@ class PaymentMethod
         return $this->orders;
     }
 
-
+    // setters
 
     public function setName(string $name) : void
     {

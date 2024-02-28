@@ -28,6 +28,8 @@ class OrderStatus
         $this->orders = new ArrayCollection;
     }
 
+    // getters
+
     public function getId() : int
     {
         return $this->id;
@@ -48,7 +50,7 @@ class OrderStatus
         return $this->orders;
     }
 
-
+    // setters
 
     public function setName(string $name) : void
     {

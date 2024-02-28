@@ -28,6 +28,8 @@ class DeliveryMethod
         $this->orders = new ArrayCollection;
     }
 
+    // Getters
+
     public function getId() : int
     {
         return $this->id;
@@ -48,7 +50,7 @@ class DeliveryMethod
         return $this->orders;
     }
 
-
+    // setters
 
     public function setName(string $name) : void
     {

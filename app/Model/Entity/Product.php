@@ -37,6 +37,8 @@ class Product
         $this->inOrders = new ArrayCollection;
     }
 
+    // getters
+
     public function getId() : ?int
     {
         return $this->id ?? null;
@@ -66,6 +68,10 @@ class Product
     {
         return $this->unitPrice;
     }
+
+    // setters
+    // POZN. jednotlive settery jsem nastavil kvuli seederu a pak uz jsem to tak nechal, vetsina z nich se
+    // nepouziva mimo seeder
 
     public function setName(string $name) : void
     {

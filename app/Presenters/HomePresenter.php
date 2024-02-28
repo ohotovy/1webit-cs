@@ -29,6 +29,7 @@ final class HomePresenter extends Nette\Application\UI\Presenter
 	{
         $this->template->query = $query;
         $productRepository = $this->em->getRepository(Product::class);
+        // handle case insensitive search if needed (query parameter exists) if query exists
         if (!is_null($query)) {
             $qb = $this->em->createQueryBuilder();
             $qb->select(array('u'))
@@ -40,6 +41,7 @@ final class HomePresenter extends Nette\Application\UI\Presenter
             $query = $qb->getQuery();
             $products = $query->getResult();
         } else {
+            // return all products if not
             $products = $productRepository->findBy([],['id' => 'ASC']);
         }
         $this->template->products = $products;
@@ -54,9 +56,7 @@ final class HomePresenter extends Nette\Application\UI\Presenter
         $form = new Form;
 
 		$form->addHidden('product_id');
-
         $form->addInteger('qty');
-
         $form->addSubmit('send');
 
         $form->onSuccess[] = $this->addToBasketFormSucceeded(...);
@@ -95,15 +95,9 @@ final class HomePresenter extends Nette\Application\UI\Presenter
         $product = $this->em->getRepository(Product::class)
             ->find($data->product_id);
 
-        // var_dump($order);
-        // die();
         // check if OrderItem for basket & product exists
         $orderItem = $this->em->getRepository(OrderItem::class)
             ->findOneBy(['productId' => (int) $data->product_id, 'orderId' => $basketId]);
-            // ->findOneBy(['productId' => $data->product_id, 'orderId' => $basketId]);
-
-        // var_dump($data->product_id);
-        // die();
 
         if (is_null($orderItem)) {
             // save OrderItem
@@ -123,10 +117,6 @@ final class HomePresenter extends Nette\Application\UI\Presenter
         $this->em->persist($orderItem);
         $this->em->flush();
 
-
-		// var_dump($orderItem);
-		// die;
-
         $this->flashMessage('Basket Addition Successful', 'success');
         $this->redirect('this');
     }
@@ -136,7 +126,6 @@ final class HomePresenter extends Nette\Application\UI\Presenter
         $form = new Form;
 
 		$form->addText('search_query');
-
         $form->addSubmit('send');
 
         $form->onSuccess[] = $this->searchFormSucceeded(...);
@@ -146,9 +135,6 @@ final class HomePresenter extends Nette\Application\UI\Presenter
 
     private function searchFormSucceeded(\stdClass $data): void
     {
-        $dataValid = true;
-
-        // $this->flashMessage();
         $this->redirect('this',['query' => $data->search_query]);
     }
 }

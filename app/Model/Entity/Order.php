@@ -17,9 +17,6 @@ class Order
     #[ORM\GeneratedValue]
     private int|null $id = null;
 
-    #[ORM\OneToMany(targetEntity: OrderItem::class, mappedBy: 'order')]
-    private Collection $items;
-
     #[ORM\Column(name: 'first_name', nullable: 'true')]
     private string $firstName;
     #[ORM\Column(name: 'last_name', nullable: 'true')]
@@ -35,6 +32,9 @@ class Order
     #[ORM\Column(type: Types::TEXT, nullable: 'true')]
     private string $note;
 
+    #[ORM\OneToMany(targetEntity: OrderItem::class, mappedBy: 'order')]
+    private Collection $items;
+
     #[ORM\ManyToOne(inversedBy: 'orders')]
     private DeliveryMethod $deliveryMethod;
 
@@ -48,6 +48,8 @@ class Order
     {
         $this->items = new ArrayCollection;
     }
+
+    // getters
 
     public function getId() : ?int
     {
@@ -118,6 +120,8 @@ class Order
     {
         return $this->status ?? null;
     }
+
+    // setters
 
     public function setInvoicingData(OrderInvoiceData $data) : void
     {
