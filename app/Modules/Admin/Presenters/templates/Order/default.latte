@@ -1,0 +1,12 @@
+{block content}
+    <h2>Orders Admin</h2>
+
+    <a n:href="Home:default">Home</a>
+
+    <div n:foreach="$orders as $order">
+        <p>ID --- {$order->getId()}</p>
+        <p>Name --- {$order->getFullName()}</p>
+        <p>Value --- {$order->getTotalPrice()}</p>
+        <a n:href="Order:edit $orderId=$order->getId()">Edit</a>
+    </div>
+{/block}
