@@ -39,6 +39,11 @@ class OrderItem
     {
     }
 
+    public function getId() : int
+    {
+        return $this->id;
+    }
+
     public function getProductName() : string
     {
         return $this->product->getName();
@@ -47,6 +52,16 @@ class OrderItem
     public function getProductPrice() : string
     {
         return $this->product->getPrice();
+    }
+
+    public function getQuantity() : int
+    {
+        return $this->qty;
+    }
+
+    public function getPrice() : float
+    {
+        return $this->unitPrice;
     }
 
     public function getTotalPrice() : float
@@ -70,5 +85,10 @@ class OrderItem
     public function addBasketIncrease(ProductBasketIncrease $data) : void
     {
         $this->qty += $data->qty;
+    }
+
+    public function setBasketValue(ProductBasketIncrease $data) : void
+    {
+        $this->qty = $data->qty;
     }
 }

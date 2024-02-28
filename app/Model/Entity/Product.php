@@ -8,6 +8,8 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
+use App\DTO\ProductEdit;
+
 #[ORM\Entity]
 #[ORM\Table(name: 'products')]
 class Product
@@ -35,9 +37,9 @@ class Product
         $this->inOrders = new ArrayCollection;
     }
 
-    public function getId() : int
+    public function getId() : ?int
     {
-        return $this->id;
+        return $this->id ?? null;
     }
 
     public function getDescription() : string
@@ -63,5 +65,38 @@ class Product
     public function getPrice() : float
     {
         return $this->unitPrice;
+    }
+
+    public function setName(string $name) : void
+    {
+        $this->name = $name;
+    }
+
+    public function setDescription(string $description) : void
+    {
+        $this->description = $description;
+    }
+
+    public function setShortDescription(string $shortDescription) : void
+    {
+        $this->shortDesc = $shortDescription;
+    }
+
+    public function setImageUrl(string $url) : void
+    {
+        $this->imageUrl = $url;
+    }
+
+    public function setPrice(float|int $price) : void
+    {
+        $this->unitPrice = (float) $price;
+    }
+
+    public function setProductData(ProductEdit $data) : void
+    {
+        $this->name = $data->name;
+        $this->description = $data->description;
+        $this->shortDesc = $data->shortDesc;
+        $this->unitPrice = $data->unitPrice;
     }
 }
